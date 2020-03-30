@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToolkitCore.Controllers;
-using ToolkitCore.Database;
+﻿using System.Collections.Generic;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Models;
 using UnityEngine;
@@ -94,15 +88,15 @@ namespace ToolkitCore.Models
             CheckIfNewViewer();
         }
 
-        
-
+        private readonly object newViewerLock = new object();
         void CheckIfNewViewer()
         {
-            lock (Viewers.All)
+            if(!Viewers.All.Contains(this))
             {
-                lock (Viewers.All)
+                lock (newViewerLock)
                 {
-                    if (!Viewers.All.Contains(this)) Viewers.All.Add(this);
+                    if (!Viewers.All.Contains(this))
+                        Viewers.All.Add(this);
                 }
             }
         }

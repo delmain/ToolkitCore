@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using ToolkitCore.Models;
 using UnityEngine;
 using Verse;
 
@@ -21,7 +18,8 @@ namespace ToolkitCore.Database
 
         static void Main()
         {
-            if (!Directory.Exists(dataPath)) Directory.CreateDirectory(dataPath);
+            if (!Directory.Exists(dataPath)) 
+                Directory.CreateDirectory(dataPath);
         }
 
         public static void SaveToolkit()

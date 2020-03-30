@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToolkitCore.Models;
+﻿using ToolkitCore.Models;
 using TwitchLib.Client.Interfaces;
-using TwitchLib.Client.Models;
 
 namespace ToolkitCore.CommandMethods
 {

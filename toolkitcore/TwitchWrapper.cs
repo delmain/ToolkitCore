@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using ToolkitCore.Controllers;
 using ToolkitCore.Models;
 using TwitchLib.Client;
@@ -11,7 +9,6 @@ using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
-using UnityEngine;
 using Verse;
 
 namespace ToolkitCore
@@ -84,10 +81,13 @@ namespace ToolkitCore
 
         private static void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            Log.Message($"{e.ChatMessage.DisplayName}: {e.ChatMessage.Message}");
+            if (e?.ChatMessage != null)
+                Log.Message($"{e.ChatMessage.DisplayName}: {e.ChatMessage.Message}");
+            else
+                Log.Message("Empty ChatMessage Received");
 
             List<TwitchInterfaceBase> receivers = Current.Game.components.OfType<TwitchInterfaceBase>().ToList();
-
+            
             foreach (TwitchInterfaceBase receiver in receivers)
             {
                 receiver.ParseCommand(e.ChatMessage);
@@ -96,7 +96,10 @@ namespace ToolkitCore
 
         private static void OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
-            Log.Message($"{e.Command.ChatMessage.DisplayName}: {e.Command.ChatMessage.Message}");
+            if (e?.Command?.ChatMessage != null)
+                Log.Message($"{e.Command.ChatMessage.DisplayName}: {e.Command.ChatMessage.Message}");
+            else
+                Log.Message("Empty Command Received");
 
             ToolkitChatCommand chatCommand = ChatCommandController.GetChatCommand(e.Command.CommandText);
             if (chatCommand != null)

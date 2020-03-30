@@ -78,7 +78,7 @@ namespace ToolkitCore
 
             Rect connectionButton = new Rect(input.x, input.y + verticalSpacing, input.width, verticalHeight);
 
-            if (TwitchWrapper.Client.IsConnected)
+            if (TwitchWrapper.Client != null && TwitchWrapper.Client.IsConnected)
             {
                 Widgets.Label(input, TCText.ColoredText("Connected", Color.green));
 

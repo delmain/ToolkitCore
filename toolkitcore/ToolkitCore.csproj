@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -28,9 +30,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.1.2575" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.1.2587" />
     <PackageReference Include="Lib.Harmony" Version="2.0.0.8" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup>
@@ -90,10 +93,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <NuGetCommandLineVersion>5.4.0</NuGetCommandLineVersion>
-    <PostBuildEvent>$(NuGetPackageFolders)nuget.commandline\$(NuGetCommandLineVersion)\tools\nuget.exe pack $(ProjectDir)ToolkitCore.nuspec -OutputDirectory $(ProjectDir)</PostBuildEvent>
+    <PostBuildEvent>nuget.exe pack $(ProjectDir)ToolkitCore.nuspec -OutputDirectory $(ProjectDir)</PostBuildEvent>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="$(NuGetCommandLineVersion)" />
-  </ItemGroup>
 </Project>

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TwitchLib.Client.Interfaces;
-using TwitchLib.Client.Models;
-using Verse;
+﻿using TwitchLib.Client.Interfaces;
 
 namespace ToolkitCore.Models
 {
-    public class CommandMethod
+    public abstract class CommandMethod
     {
         public ToolkitChatCommand command;
 
@@ -32,9 +25,6 @@ namespace ToolkitCore.Models
             return true;
         }
 
-        public virtual void Execute(ITwitchCommand twitchCommand)
-        {
-
-        }
+        public abstract void Execute(ITwitchCommand twitchCommand);
     }
 }
