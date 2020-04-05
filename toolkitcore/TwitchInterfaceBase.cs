@@ -1,10 +1,10 @@
-﻿using TwitchLib.Client.Models;
+﻿using ToolkitCore.Models;
 using Verse;
 
 namespace ToolkitCore
 {
     public abstract class TwitchInterfaceBase : GameComponent
     {
-        public abstract void ParseCommand(ChatMessage msg);
+        public abstract void ParseCommand(MessageDetails msg);
     }
 }

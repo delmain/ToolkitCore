@@ -67,7 +67,18 @@ namespace ToolkitCore
 
         private static void OnWhisperReceived(object sender, OnWhisperReceivedArgs e)
         {
-            
+            if (e?.WhisperMessage == null)
+            {
+                Log.Message("Empty WhisperMessage Received");
+                return;
+            }
+
+            Log.Message($"{e.WhisperMessage.DisplayName}: {e.WhisperMessage.Message}");
+            var message = new WhisperDetails(e.WhisperMessage);
+            foreach(var receiver in Current.Game.components.OfType<TwitchInterfaceBase>())
+            {
+                receiver.ParseCommand(message);
+            }
         }
 
         private static void OnConnected(object sender, OnConnectedArgs e)
@@ -81,26 +92,29 @@ namespace ToolkitCore
 
         private static void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            if (e?.ChatMessage != null)
-                Log.Message($"{e.ChatMessage.DisplayName}: {e.ChatMessage.Message}");
-            else
-                Log.Message("Empty ChatMessage Received");
-
-            List<TwitchInterfaceBase> receivers = Current.Game.components.OfType<TwitchInterfaceBase>().ToList();
-            
-            foreach (TwitchInterfaceBase receiver in receivers)
+            if (e?.ChatMessage == null)
             {
-                receiver.ParseCommand(e.ChatMessage);
+                Log.Message("Empty ChatMessage Received");
+                return;
+            }
+
+            Log.Message($"{e.ChatMessage.DisplayName}: {e.ChatMessage.Message}");
+            var message = new ChatDetails(e.ChatMessage);
+            foreach (var receiver in Current.Game.components.OfType<TwitchInterfaceBase>())
+            {
+                receiver.ParseCommand(message);
             }
         }
 
         private static void OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
-            if (e?.Command?.ChatMessage != null)
-                Log.Message($"{e.Command.ChatMessage.DisplayName}: {e.Command.ChatMessage.Message}");
-            else
+            if (e?.Command?.ChatMessage == null)
+            {
                 Log.Message("Empty Command Received");
+                return;
+            }
 
+            Log.Message($"{e.Command.ChatMessage.DisplayName}: {e.Command.ChatMessage.Message}");
             ToolkitChatCommand chatCommand = ChatCommandController.GetChatCommand(e.Command.CommandText);
             if (chatCommand != null)
             {
@@ -111,6 +125,11 @@ namespace ToolkitCore
         public static void SendChatMessage(string message)
         {
             Client.SendMessage(Client.GetJoinedChannel(ToolkitCoreSettings.channel_username), message);
+        }
+
+        public static void SendWhisper(string username, string message)
+        {
+            Client.SendWhisper(username, message);
         }
     }
 }

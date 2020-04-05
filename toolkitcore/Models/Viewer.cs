@@ -1,19 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TwitchLib.Client.Enums;
-using TwitchLib.Client.Models;
-using UnityEngine;
 using Verse;
 
 namespace ToolkitCore.Models
 {
     public static class Viewers
     {
+        // TODO Figure out a thread-safe implementation for this
         public static List<Viewer> All
         {
             get
             {
                 return ToolkitData.globalDatabase.viewers;
             }
+        }
+
+        public static Viewer FindByUsername(string username)
+        {
+            return All.FirstOrDefault(v => string.Equals(v?.Username, username, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public static Viewer CreateAndAddViewer(string username)
+        {
+            var viewer = new Viewer(Username: username);
+            All.Add(viewer);
+            return viewer;
         }
     }
 
@@ -25,6 +38,8 @@ namespace ToolkitCore.Models
 
         public string UserId;
 
+        public string ColorHex;
+
         public bool IsBroadcaster;
 
         public bool IsBot;
@@ -33,7 +48,7 @@ namespace ToolkitCore.Models
 
         public bool IsSubscriber;
 
-        public List<KeyValuePair<string, string>> Badges;
+        public bool IsVIP;
 
         public UserType UserType;
 
@@ -44,10 +59,10 @@ namespace ToolkitCore.Models
 
         public Viewer(string username)
         {
-            this.Username = username;
+            Username = username;
         }
 
-        public Viewer(string Username = null, string DisplayName = null, string UserId = null, bool IsBroadcaster = false, bool IsBot = false, bool IsModerator = false, bool IsSubscriber = false)
+        public Viewer(string Username = null, string DisplayName = null, string UserId = null, bool IsBroadcaster = false, bool IsBot = false, bool IsModerator = false, bool IsSubscriber = false, bool IsVIP = false)
         {
             this.Username = Username;
             this.DisplayName = DisplayName;
@@ -56,6 +71,7 @@ namespace ToolkitCore.Models
             this.IsBot = IsBot;
             this.IsModerator = IsModerator;
             this.IsSubscriber = IsSubscriber;
+            this.IsVIP = IsVIP;
         }
 
         public void ExposeData()
@@ -67,38 +83,13 @@ namespace ToolkitCore.Models
             Scribe_Values.Look(ref IsBot, "IsBot");
             Scribe_Values.Look(ref IsModerator, "IsModerator");
             Scribe_Values.Look(ref IsSubscriber, "IsSubscriber");
+            Scribe_Values.Look(ref IsVIP, "IsVIP");
+            Scribe_Values.Look(ref ColorHex, "ColorHex");
         }
 
-        public string ToJson()
+        public override string ToString()
         {
-            return JsonUtility.ToJson(this, true);
-        }
-
-        public void UpdateViewerFromMessage(ChatMessage chatMessage)
-        {
-            this.DisplayName = chatMessage.DisplayName;
-            this.UserId = chatMessage.UserId;
-            this.IsBroadcaster = chatMessage.IsBroadcaster;
-            this.IsBot = chatMessage.IsMe;
-            this.IsModerator = chatMessage.IsModerator;
-            this.IsSubscriber = chatMessage.IsSubscriber;
-            this.Badges = chatMessage.Badges;
-            this.UserType = chatMessage.UserType;
-
-            CheckIfNewViewer();
-        }
-
-        private readonly object newViewerLock = new object();
-        void CheckIfNewViewer()
-        {
-            if(!Viewers.All.Contains(this))
-            {
-                lock (newViewerLock)
-                {
-                    if (!Viewers.All.Contains(this))
-                        Viewers.All.Add(this);
-                }
-            }
+            return $"<{UserId}> {DisplayName} ({Username})";
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ToolkitCore.Controllers;
-using TwitchLib.Client.Models;
+﻿using ToolkitCore.Models;
 using Verse;
 
 namespace ToolkitCore.Utilities
@@ -9,9 +8,10 @@ namespace ToolkitCore.Utilities
         public ViewerInterface(Game game)
         { }
 
-        public override void ParseCommand(ChatMessage msg)
+        public override void ParseCommand(MessageDetails msg)
         {
-            ViewerController.GetViewer(msg.Username).UpdateViewerFromMessage(msg);
+            // Do nothing because Viewer updating is moved to message instantiation
+            // Leave this here just to not break saves that have it already loaded.
         }
     }
 }
